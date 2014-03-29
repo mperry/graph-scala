@@ -9,8 +9,11 @@
 
 // Apply the scala plugin to add support for Scala
 apply plugin: 'scala'
+apply plugin: "application"
 
 defaultTasks "build"
+
+mainClassName = "com.github.mperry.graph.Solution"
 
 // In this section you declare where to find the dependencies of your project
 repositories {
