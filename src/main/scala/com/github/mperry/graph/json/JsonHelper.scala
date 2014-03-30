@@ -22,30 +22,38 @@ object JsonHelper {
 	}
 
 	type WeightMap = Map[String, Int]
-	type NodeMap = Map[String, WeightMap]
+	type NodeTuple = (String, WeightMap)
 
 	/**
 	 * Example: parse(""" {"A": { "B": 100, "C": 30 }} """)
 	 * @param json
 	 * @return
 	 */
-	def parseNode(json: Json): Option[NodeMap] = {
+	def parseNode(json: Json): Option[NodeTuple] = {
 		json.assoc.flatMap(list => {
 
-			val m = Some(Map.empty[String, WeightMap]): Option[Map[String, WeightMap]]
-			list.foldLeft(m)((acc, t) => {
-				t match {
-					case (f, j) => {
-						acc.flatMap(m => {
-							val owm = parseEdgeWeights(j)
-							owm.map(wm => {
-								m + ((f, wm))
-							})
-
-						})
-					}
+			list.head match {
+				case (f, j) => {
+					val owm = parseEdgeWeights(j)
+					owm.map((f, _))
 				}
-			})
+
+			}
+
+//			val m = Some(Map.empty[String, WeightMap]): Option[Map[String, WeightMap]]
+//			list.foldLeft(m)((acc, t) => {
+//				t match {
+//					case (f, j) => {
+//						acc.flatMap(m => {
+//							val owm = parseEdgeWeights(j)
+//							owm.map(wm => {
+//								m + ((f, wm))
+//							})
+//
+//						})
+//					}
+//				}
+//			})
 
 		})
 	}

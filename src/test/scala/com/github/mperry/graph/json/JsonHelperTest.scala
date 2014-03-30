@@ -41,7 +41,7 @@ class JsonHelperTest extends FunSuite {
 		val o = Parse.parseOption(json)
 		val z = o.flatMap(j => JsonHelper.parseNode(j))
 		//		println(z)
-		assert(z == Some(Map("A" -> expectedWeightMap)))
+		assert(z == Some(("A", expectedWeightMap)))
 	}
 
 
@@ -69,7 +69,7 @@ class JsonHelperTest extends FunSuite {
 	def parse(json: String) = {
 		val og = json.decodeOption[JsonGraph]
 		println(og)
-		val z = og.flatMap(g => g.toListNodeMap)
+		val z = og.flatMap(g => g.toListNodeTuple)
 		println(z)
 		z
 
