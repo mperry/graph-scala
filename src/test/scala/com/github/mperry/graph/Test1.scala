@@ -4,6 +4,8 @@ import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.FunSuite
 
+import Graph._
+
 /**
  * Created by MarkPerry on 30/03/2014.
  */
@@ -37,6 +39,7 @@ class Test1 extends FunSuite {
 		val g = Graph.toGraph(simpleMap)
 		val n = "A"
 		val d = g.shortestPath(n, n)
+
 		assert(d.get(Node(n)).map(_.size == 0).getOrElse(false))
 //		println(d)
 	}
@@ -44,14 +47,17 @@ class Test1 extends FunSuite {
 	test("oneStep") {
 		val g = Graph.toGraph(simpleMap)
 		val d = g.shortestPath("A", "B")
-		def b = d.get(Node("B")).map(Graph.distance(_) == 100).getOrElse(false)
+		def b = distance(d, "B").map(_ == 100).getOrElse(false)
 		assert(b)
-		println(d)
+//		println(d)
 	}
 
 	test("twoSteps") {
 		val g = Graph.toGraph(simpleMap)
 		val d = g.shortestPath("A", "C")
+		val b = distance(d, "C").map(_ == 200).getOrElse(false)
+		assert(b)
+
 		println(d)
 	}
 

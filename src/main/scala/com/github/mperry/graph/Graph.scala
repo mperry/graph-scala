@@ -2,6 +2,10 @@ package com.github.mperry.graph
 
 object Graph {
 
+	def distance(m: DistanceMap, n: NodeId): Option[Weight] = {
+		m.get(Node(n)).map(distance(_))
+	}
+
 	def process(m: Map[String, List[(String, Weight)]]): (Set[Node], Set[Edge]) = {
 
 		def nodes = Set.empty[Node]
@@ -80,18 +84,18 @@ case class Graph(nodes: Set[Node], edges: Map[Node, List[Edge]]) {
     if (edge.from == current) edge.to else edge.from
   }
 
-  def compute(node: Node, oldDist: Option[Weight], newDist: Weight, distances: DistanceMap, list: List[Edge]) = {
+  def compute(node: Node, oldDist: Option[Weight], newDist: Weight, distances: DistanceMap, list: List[Edge]): (DistanceMap, Boolean) = {
 	oldDist.map(x => {
 		if (x <= newDist) {
-			distances
+			(distances, false)
 		} else {
-			distances.+((node, list))
+			(distances.+((node, list)), true)
 		}
-	}).getOrElse(distances + ((node, list)))
+	}).getOrElse((distances + ((node, list)), true))
 
   }
 
-	def shortestPath(from: NodeName, to: NodeName): DistanceMap = {
+	def shortestPath(from: NodeId, to: NodeId): DistanceMap = {
 		shortestPath(Node(from), Node(to))
 	}
 
@@ -107,15 +111,18 @@ case class Graph(nodes: Set[Node], edges: Map[Node, List[Edge]]) {
 		val nextEdges = edges.get(current)
 		val newMap = nextEdges.map(_.foldLeft(distances)((dm, e) => {
 			val nn = nextNode(current, e)
-			val dm2 = newDistanceMap(dm, current, e, nn)
-			shortestPath(from, nn, to, dm2)
+			val t = newDistanceMap(dm, current, e, nn)
+			t match {
+				case (dm2, b) => if (!b) dm2 else shortestPath(from, nn, to, dm2)
+			}
+
 		}))
 		newMap.getOrElse(distances)
 	}
 
   }
 
-  def newDistanceMap(dm: DistanceMap, current: Node, e: Edge, nn: Node): DistanceMap = {
+  def newDistanceMap(dm: DistanceMap, current: Node, e: Edge, nn: Node): (DistanceMap, Boolean) = {
 	val o1 = Graph.distance(dm, current).map(_ + e.distance)
 	val oldWay = distance(dm, nn)
 	val o3 = dm.get(current).map(e::_)
@@ -124,7 +131,7 @@ case class Graph(nodes: Set[Node], edges: Map[Node, List[Edge]]) {
 //      oldWay <- o2
       newList <- o3
     } yield (compute(nn, oldWay, distanceThisWay, dm, newList))
-	dm2.getOrElse(dm)
+	dm2.getOrElse((dm, true))
   }
 
 }

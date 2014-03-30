@@ -5,13 +5,13 @@ package com.github.mperry
  */
 package object graph {
 
-  type Weight = Int
-  val MaxWeight = Int.MaxValue
-  val MinWeight = Int.MinValue
+	type Weight = Int
+	val MaxWeight = Int.MaxValue
+	val MinWeight = Int.MinValue
 
-  type DistanceMap = Map[Node, List[Edge]]
-	type SimpleGraph = Map[String, List[(String, Weight)]]
-	type NodeName = String
+	type DistanceMap = Map[Node, List[Edge]]
+	type SimpleGraph = Map[NodeId, List[(NodeId, Weight)]]
+	type NodeId = String
 
 
 }
