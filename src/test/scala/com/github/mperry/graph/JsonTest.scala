@@ -20,12 +20,7 @@ import scalaz._
 
 import com.github.mperry.graph.json._
 
-@RunWith(classOf[JUnitRunner])
-class JsonTest extends FunSuite {
-
-	test("true") {
-		assert(true)
-	}
+object JsonTest {
 
 	def input: String = {
 		"""
@@ -42,6 +37,15 @@ class JsonTest extends FunSuite {
 			}
 		"""
 	}
+}
+
+@RunWith(classOf[JUnitRunner])
+class JsonTest extends FunSuite {
+
+	test("true") {
+		assert(true)
+	}
+
 
 	def parse(json: String) = {
 		val og = json.decodeOption[JsonGraph]

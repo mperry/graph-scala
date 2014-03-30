@@ -29,11 +29,11 @@ case class JsonGraph(map: List[Json]) {
 				val id = nt._1
 				val weightMap = nt._2
 
-				weightMap.foldLeft(m)((acc, kv) => {
+				weightMap.foldLeft(acc)((acc2, kv) => {
 					kv match {
 						case (s, i) => {
-							val newList = m.get(id).map(list => (s, i)::list).getOrElse(List((s, i)))
-							m + ((id, newList))
+							val newList = acc2.get(id).map(list => (s, i)::list).getOrElse(List((s, i)))
+							acc2 + ((id, newList))
 //							m + (id, m.get(id).map(list => (s, i)::list).getOrElse(List((s, i))))
 //							acc + (nt._1)
 
