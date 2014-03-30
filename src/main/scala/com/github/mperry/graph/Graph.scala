@@ -18,22 +18,23 @@ object Graph {
 					def name1 = kv._1
 					def list = kv._2
 					val n1 = Node(name1)
-					list.foldLeft((ns + n1, es)) { case ((nodes2, edges2), (name2, w)) =>
-						val n2 = Node(name2)
-						val e = createEdge(n1, n2, w)
-						(nodes2 + n2, edges2 + e)
+					list.foldLeft((ns + n1, es)) {
+						case ((nodes2, edges2), (name2, w)) =>
+							val n2 = Node(name2)
+							val e = createEdge(n1, n2, w)
+							(nodes2 + n2, edges2 + e)
 					}
 				}
 			}
 
 		})
-//		(nodes, edges)
+		//		(nodes, edges)
 	}
 
 	def toGraph(g: SimpleGraph): Graph = {
 
 		val t = process(g)
-//		val m = edgeMap(t._2)
+		//		val m = edgeMap(t._2)
 		Graph(t._1, edgeMap(t._2))
 
 	}
@@ -43,13 +44,13 @@ object Graph {
 			edgeMap(edgeMap(m, e.from, e), e.to, e)
 		})
 	}
-	
+
 	def edgeMap(m: Map[Node, List[Edge]], n: Node, e: Edge): PathMap = {
 
 		// deal with from first
 		val o = m.get(n)
 		val edgeList = o.map(list => {
-			e::list
+			e :: list
 		}).getOrElse(List(e))
 
 		m + ((n, edgeList))
@@ -80,20 +81,20 @@ case class Graph(nodes: Set[Node], edges: EdgeMap) {
 
 	import Graph._
 
-  def nextNode(current: Node, edge: Edge): Node = {
-    if (edge.from == current) edge.to else edge.from
-  }
+	def nextNode(current: Node, edge: Edge): Node = {
+		if (edge.from == current) edge.to else edge.from
+	}
 
-  def compute(node: Node, oldDist: Option[Weight], newDist: Weight, distances: PathMap, list: List[Edge]): (PathMap, Boolean) = {
-	oldDist.map(x => {
-		if (x <= newDist) {
-			(distances, false)
-		} else {
-			(distances.+((node, list)), true)
-		}
-	}).getOrElse((distances + ((node, list)), true))
+	def compute(node: Node, oldDist: Option[Weight], newDist: Weight, distances: PathMap, list: List[Edge]): (PathMap, Boolean) = {
+		oldDist.map(x => {
+			if (x <= newDist) {
+				(distances, false)
+			} else {
+				(distances.+((node, list)), true)
+			}
+		}).getOrElse((distances + ((node, list)), true))
 
-  }
+	}
 
 	def shortestPath(from: NodeId, to: NodeId): PathMap = {
 		shortestPath(Node(from), Node(to))
@@ -107,35 +108,35 @@ case class Graph(nodes: Set[Node], edges: EdgeMap) {
 	 * Note that this is recursive (but not tail recursive) and will stack
 	 * overflow for very large graphs
 	 */
-  def shortestPath(from: Node, current: Node, to: Node, distances: PathMap): PathMap = {
-    // lookup paths from this node
-	if (current == to) {
-		distances
-	} else {
-		val nextEdges = edges.get(current)
-		val newMap = nextEdges.map(_.foldLeft(distances)((dm, e) => {
-			val nn = nextNode(current, e)
-			val t = newDistanceMap(dm, current, e, nn)
-			t match {
-				case (dm2, b) => if (!b) dm2 else shortestPath(from, nn, to, dm2)
-			}
+	def shortestPath(from: Node, current: Node, to: Node, distances: PathMap): PathMap = {
+		// lookup paths from this node
+		if (current == to) {
+			distances
+		} else {
+			val nextEdges = edges.get(current)
+			val newMap = nextEdges.map(_.foldLeft(distances)((dm, e) => {
+				val nn = nextNode(current, e)
+				val t = newDistanceMap(dm, current, e, nn)
+				t match {
+					case (dm2, b) => if (!b) dm2 else shortestPath(from, nn, to, dm2)
+				}
 
-		}))
-		newMap.getOrElse(distances)
+			}))
+			newMap.getOrElse(distances)
+		}
+
 	}
 
-  }
-
-  def newDistanceMap(dm: PathMap, current: Node, e: Edge, nn: Node): (PathMap, Boolean) = {
-	val o1 = Graph.distance(dm, current).map(_ + e.distance)
-	val oldWay = distance(dm, nn)
-	val o3 = dm.get(current).map(e::_)
-    val dm2 = for {
-      distanceThisWay <- o1
-//      oldWay <- o2
-      newList <- o3
-    } yield (compute(nn, oldWay, distanceThisWay, dm, newList))
-	dm2.getOrElse((dm, true))
-  }
+	def newDistanceMap(dm: PathMap, current: Node, e: Edge, nn: Node): (PathMap, Boolean) = {
+		val o1 = Graph.distance(dm, current).map(_ + e.distance)
+		val oldWay = distance(dm, nn)
+		val o3 = dm.get(current).map(e :: _)
+		val dm2 = for {
+			distanceThisWay <- o1
+			//      oldWay <- o2
+			newList <- o3
+		} yield (compute(nn, oldWay, distanceThisWay, dm, newList))
+		dm2.getOrElse((dm, true))
+	}
 
 }
