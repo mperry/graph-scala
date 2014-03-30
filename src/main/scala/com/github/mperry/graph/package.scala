@@ -6,12 +6,9 @@ package com.github.mperry
 package object graph {
 
 	type Weight = Int
-	val MaxWeight = Int.MaxValue
-	val MinWeight = Int.MinValue
-
-	type DistanceMap = Map[Node, List[Edge]]
+	type PathMap = Map[Node, List[Edge]]
+	type EdgeMap = Map[Node, List[Edge]]
 	type SimpleGraph = Map[NodeId, List[(NodeId, Weight)]]
 	type NodeId = String
-
 
 }

@@ -12,18 +12,15 @@ import Graph._
 
 @RunWith(classOf[JUnitRunner])
 class Test1 extends FunSuite {
-	test("someLibraryMethod is always true") {
-		assert(true)
-	}
 
-	def simpleMap: SimpleGraph = {
+	def simpleGraph: SimpleGraph = {
 		Map(
 			"A" -> List(("B", 100)),
 			"B" -> List(("C", 100))
 		)
 	}
 
-	def fullMap: SimpleGraph = {
+	def standardGraph: SimpleGraph = {
 		Map(
 			"A" -> List(("B", 100), ("C", 30)),
 			"B" -> List(("F", 300)),
@@ -35,50 +32,29 @@ class Test1 extends FunSuite {
 		)
 	}
 
-	test("noSteps") {
-		val g = Graph.toGraph(simpleMap)
-		val n = "A"
-		val d = g.shortestPath(n, n)
-
-		assert(d.get(Node(n)).map(_.size == 0).getOrElse(false))
-//		println(d)
-	}
-
-	test("oneStep") {
-		val g = Graph.toGraph(simpleMap)
-		val d = g.shortestPath("A", "B")
-//		def b = distance(d, "B").map(_ == 100).getOrElse(false)
-		val b = check(d, "B", 100)
-		assert(b)
-//		println(d)
-	}
-
-	test("twoSteps") {
-		val g = Graph.toGraph(simpleMap)
-		val d = g.shortestPath("A", "C")
-
-//		val b = distance(d, "C").map(_ == 200).getOrElse(false)
-		val b = check(d, "C", 200)
-		assert(b)
-
-//		println(d)
-	}
-
-	def check(d: DistanceMap, id: NodeId, w: Weight): Boolean = {
+	def checkDistance(d: PathMap, id: NodeId, w: Weight): Boolean = {
 		distance(d, id).map(_ == w).getOrElse(false)
 	}
 
-	test("two step for complex map") {
-//		def m = simpleMap
-		def m = fullMap
-		val g = Graph.toGraph(m)
-//		val dist = g.shortestPath(Node("A"), Node("A"))
-//		println(dist)
-		val d2 = g.shortestPath(Node("A"), Node("D"))
-		assert(check(d2, "D", 230))
+	test("no steps for simple graph") {
+		val n = "A"
+		val pathMap = toGraph(simpleGraph).shortestPath(n, n)
+		assert(pathMap.get(Node(n)).map(_.size == 0).getOrElse(false))
+	}
 
-//		println(d2)
+	test("one step for simple graph") {
+		val pathMap = toGraph(simpleGraph).shortestPath("A", "B")
+		assert(checkDistance(pathMap, "B", 100))
+	}
 
+	test("two steps for simple graph") {
+		val pathMap = toGraph(simpleGraph).shortestPath("A", "C")
+		assert(checkDistance(pathMap, "C", 200))
+	}
+
+	test("two steps for standard graph") {
+		val pathMap = toGraph(standardGraph).shortestPath("A", "D")
+		assert(checkDistance(pathMap, "D", 230))
 	}
 
 }

@@ -2,7 +2,7 @@ package com.github.mperry.graph
 
 object Graph {
 
-	def distance(m: DistanceMap, n: NodeId): Option[Weight] = {
+	def distance(m: PathMap, n: NodeId): Option[Weight] = {
 		m.get(Node(n)).map(distance(_))
 	}
 
@@ -38,13 +38,13 @@ object Graph {
 
 	}
 
-	def edgeMap(edges: Set[Edge]): Map[Node, List[Edge]] = {
+	def edgeMap(edges: Set[Edge]): EdgeMap = {
 		edges.foldLeft(Map.empty[Node, List[Edge]])((m, e) => {
 			edgeMap(edgeMap(m, e.from, e), e.to, e)
 		})
 	}
 	
-	def edgeMap(m: Map[Node, List[Edge]], n: Node, e: Edge): DistanceMap = {
+	def edgeMap(m: Map[Node, List[Edge]], n: Node, e: Edge): PathMap = {
 
 		// deal with from first
 		val o = m.get(n)
@@ -55,12 +55,12 @@ object Graph {
 		m + ((n, edgeList))
 	}
 
-	def createEdge(x: String, y: String, w: Weight): (Edge) = {
+	def createEdge(x: String, y: String, w: Weight): Edge = {
 		createEdge(Node(x), Node(y), w)
 	}
 
 
-	def createEdge(x: Node, y: Node, w: Weight): (Edge) = {
+	def createEdge(x: Node, y: Node, w: Weight): Edge = {
 		val t = if (x.name < y.name) (x, y) else (y, x)
 		Edge(t._1, t._2, w)
 	}
@@ -70,13 +70,13 @@ object Graph {
 		list.foldLeft(0)((d, e) => d + e.distance)
 	}
 
-	def distance(map: DistanceMap, node: Node): Option[Weight] = {
+	def distance(map: PathMap, node: Node): Option[Weight] = {
 		map.get(node).map(distance(_))
 	}
 
 }
 
-case class Graph(nodes: Set[Node], edges: Map[Node, List[Edge]]) {
+case class Graph(nodes: Set[Node], edges: EdgeMap) {
 
 	import Graph._
 
@@ -84,7 +84,7 @@ case class Graph(nodes: Set[Node], edges: Map[Node, List[Edge]]) {
     if (edge.from == current) edge.to else edge.from
   }
 
-  def compute(node: Node, oldDist: Option[Weight], newDist: Weight, distances: DistanceMap, list: List[Edge]): (DistanceMap, Boolean) = {
+  def compute(node: Node, oldDist: Option[Weight], newDist: Weight, distances: PathMap, list: List[Edge]): (PathMap, Boolean) = {
 	oldDist.map(x => {
 		if (x <= newDist) {
 			(distances, false)
@@ -95,15 +95,19 @@ case class Graph(nodes: Set[Node], edges: Map[Node, List[Edge]]) {
 
   }
 
-	def shortestPath(from: NodeId, to: NodeId): DistanceMap = {
+	def shortestPath(from: NodeId, to: NodeId): PathMap = {
 		shortestPath(Node(from), Node(to))
 	}
 
-	def shortestPath(from: Node, to: Node): DistanceMap = {
+	def shortestPath(from: Node, to: Node): PathMap = {
 		shortestPath(from, from, to, Map(from -> List()))
 	}
 
-  def shortestPath(from: Node, current: Node, to: Node, distances: DistanceMap): DistanceMap = {
+	/**
+	 * Note that this is recursive (but not tail recursive) and will stack
+	 * overflow for very large graphs
+	 */
+  def shortestPath(from: Node, current: Node, to: Node, distances: PathMap): PathMap = {
     // lookup paths from this node
 	if (current == to) {
 		distances
@@ -122,7 +126,7 @@ case class Graph(nodes: Set[Node], edges: Map[Node, List[Edge]]) {
 
   }
 
-  def newDistanceMap(dm: DistanceMap, current: Node, e: Edge, nn: Node): (DistanceMap, Boolean) = {
+  def newDistanceMap(dm: PathMap, current: Node, e: Edge, nn: Node): (PathMap, Boolean) = {
 	val o1 = Graph.distance(dm, current).map(_ + e.distance)
 	val oldWay = distance(dm, nn)
 	val o3 = dm.get(current).map(e::_)
