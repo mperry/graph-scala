@@ -1,4 +1,4 @@
-package com.github.mperry.graph
+package com.github.mperry.graph.json
 
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
@@ -6,19 +6,12 @@ import org.scalatest.FunSuite
 
 
 import argonaut._, Argonaut._
-import scalaz._, Scalaz._
 
-
-import Graph._
 
 /**
  * Created by MarkPerry on 30/03/2014.
  */
 
-import argonaut._
-import scalaz._
-
-import com.github.mperry.graph.json._
 
 object JsonTest {
 
