@@ -47,7 +47,8 @@ class Test1 extends FunSuite {
 	test("oneStep") {
 		val g = Graph.toGraph(simpleMap)
 		val d = g.shortestPath("A", "B")
-		def b = distance(d, "B").map(_ == 100).getOrElse(false)
+//		def b = distance(d, "B").map(_ == 100).getOrElse(false)
+		val b = check(d, "B", 100)
 		assert(b)
 //		println(d)
 	}
@@ -55,20 +56,28 @@ class Test1 extends FunSuite {
 	test("twoSteps") {
 		val g = Graph.toGraph(simpleMap)
 		val d = g.shortestPath("A", "C")
-		val b = distance(d, "C").map(_ == 200).getOrElse(false)
+
+//		val b = distance(d, "C").map(_ == 200).getOrElse(false)
+		val b = check(d, "C", 200)
 		assert(b)
 
-		println(d)
+//		println(d)
 	}
 
-	test("test1") {
+	def check(d: DistanceMap, id: NodeId, w: Weight): Boolean = {
+		distance(d, id).map(_ == w).getOrElse(false)
+	}
+
+	test("two step for complex map") {
 //		def m = simpleMap
 		def m = fullMap
 		val g = Graph.toGraph(m)
 //		val dist = g.shortestPath(Node("A"), Node("A"))
 //		println(dist)
 		val d2 = g.shortestPath(Node("A"), Node("D"))
-		println(d2)
+		assert(check(d2, "D", 230))
+
+//		println(d2)
 
 	}
 
