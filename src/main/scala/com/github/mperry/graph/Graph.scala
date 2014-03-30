@@ -31,17 +31,25 @@ object Graph {
 	}
 
 	def edgeMap(edges: Set[Edge]): EdgeMap = {
-		edges.foldLeft(Map.empty[Node, List[Edge]])((m, e) => {
-			edgeMap(edgeMap(m, e.from, e), e.to, e)
+		val empty = Map.empty[Node, Map[Node, Edge]]
+//		val empty = Map.empty[Node, List[Edge]]
+		edges.foldLeft(empty)((m, e) => {
+			edgeMap(edgeMap(m, e.from, e.to, e), e.to, e.from, e)
 		})
 	}
 
-	def edgeMap(m: EdgeMap, n: Node, e: Edge): EdgeMap = {
-		val o = m.get(n)
-		val edgeList = o.map(list => {
-			e :: list
-		}).getOrElse(List(e))
-		m + ((n, edgeList))
+	def edgeMap(m: EdgeMap, n1: Node, n2: Node, e: Edge): EdgeMap = {
+//		val o = m.get(n)
+//		val edgeList = o.map(list => {
+//			e :: list
+//		}).getOrElse(List(e))
+		val t = (n1, Map(n2 -> e))
+		val defaultMap: EdgeMap = m + t
+		m.get(n1).map(m2 => {
+			m + ((n1, m2 + ((n2, e))))
+		}).getOrElse(defaultMap)
+//		m
+//		m + ((n, edgeList))
 	}
 
 	def createEdge(x: NodeId, y: NodeId, w: Weight): Edge = {
@@ -100,13 +108,18 @@ object Graph {
 		if (current == to) {
 			distances
 		} else {
-			val nextEdges = edgeMap.get(current)
-			val newMap = nextEdges.map(_.foldLeft(distances)((pathMap, e) => {
-				val next = nextNode(current, e)
-				val t = computePath(pathMap, current, e, next)
-				t match {
-					case (map, b) => if (!b) map else shortestPath(from, next, to, edgeMap, map)
+			val nextEdgesMap = edgeMap.get(current)
+			val newMap = nextEdgesMap.map(_.foldLeft(distances)((pathMap, kv) => {
+				kv match {
+					case (n, e) => {
+						val next = nextNode(current, e)
+						val t = computePath(pathMap, current, e, next)
+						t match {
+							case (map, b) => if (!b) map else shortestPath(from, next, to, edgeMap, map)
+						}
+					}
 				}
+
 			}))
 			newMap.getOrElse(distances)
 		}

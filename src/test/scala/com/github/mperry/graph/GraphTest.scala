@@ -11,7 +11,7 @@ import Graph._
  */
 
 @RunWith(classOf[JUnitRunner])
-class Test1 extends FunSuite {
+class GraphTest extends FunSuite {
 
 	def simpleGraph: SimpleGraph = {
 		Map(
