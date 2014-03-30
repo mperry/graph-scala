@@ -21,7 +21,7 @@ case class JsonGraph(map: List[Json]) {
 	def toSimpleGraph: Option[SimpleGraph] = {
 
 		// m: SimpleGraph
-		val m = Map.empty[NodeId, List[(NodeId, Weight)]]
+		val m = Map.empty[NodeId, Map[NodeId, Weight]]
 		toListNodeTuple.map(nodeTuples => {
 			// return SimpleGraph
 			nodeTuples.foldLeft(m)((acc, nt) => {
@@ -32,8 +32,8 @@ case class JsonGraph(map: List[Json]) {
 				weightMap.foldLeft(acc)((acc2, kv) => {
 					kv match {
 						case (s, i) => {
-							val newList = acc2.get(id).map(list => (s, i)::list).getOrElse(List((s, i)))
-							acc2 + ((id, newList))
+							val newMap = acc2.get(id).map(oldMap => oldMap + ((s, i))).getOrElse(Map(s -> i))
+							acc2 + ((id, newMap))
 //							m + (id, m.get(id).map(list => (s, i)::list).getOrElse(List((s, i))))
 //							acc + (nt._1)
 

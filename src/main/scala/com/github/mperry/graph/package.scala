@@ -8,7 +8,7 @@ package object graph {
 	type Weight = Int
 	type PathMap = Map[Node, List[Edge]]
 	type EdgeMap = Map[Node, List[Edge]]
-	type SimpleGraph = Map[NodeId, List[(NodeId, Weight)]]
+	type SimpleGraph = Map[NodeId, Map[NodeId, Weight]]
 	type NodeId = String
 
 }

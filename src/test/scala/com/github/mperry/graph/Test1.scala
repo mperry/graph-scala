@@ -15,20 +15,20 @@ class Test1 extends FunSuite {
 
 	def simpleGraph: SimpleGraph = {
 		Map(
-			"A" -> List(("B", 100)),
-			"B" -> List(("C", 100))
+			"A" -> Map("B" -> 100),
+			"B" -> Map("C" -> 100)
 		)
 	}
 
 	def standardGraph: SimpleGraph = {
 		Map(
-			"A" -> List(("B", 100), ("C", 30)),
-			"B" -> List(("F", 300)),
-			"C" -> List(("D", 200)),
-			"D" -> List(("H", 90), ("E", 80)),
-			"E" -> List(("H", 30), ("G", 150), ("F", 50)),
-			"F" -> List(("G", 70)),
-			"G" -> List(("H", 50))
+			"A" -> Map("B" -> 100, "C" -> 30),
+			"B" -> Map("F" -> 300),
+			"C" -> Map("D" -> 200),
+			"D" -> Map("H" -> 90, "E" -> 80),
+			"E" -> Map("H" -> 30, "G" -> 150, "F" -> 50),
+			"F" -> Map("G" -> 70),
+			"G" -> Map("H" -> 50)
 		)
 	}
 
