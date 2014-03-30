@@ -5,9 +5,9 @@ Dijkstra's algorithm in Scala
 
 Dependencies:
 
-Gradle 1.11
-Intellij Community Edition 13.1
-Scala 2.10.3
+* Gradle 1.11
+* Intellij Community Edition 13.1
+* Scala 2.10.3
 
 To import into Intellij:
 
