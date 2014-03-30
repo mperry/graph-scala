@@ -65,56 +65,18 @@ object Graph {
 		if (edge.from == current) edge.to else edge.from
 	}
 
-
-
-}
-
-case class Graph(nodes: Set[Node], edges: EdgeMap) {
-
-	import Graph._
-
-
-	def shortestPath(from: NodeId, to: NodeId): PathMap = {
-		shortestPath(Node(from), Node(to))
-	}
-
-	def shortestPath(from: Node, to: Node): PathMap = {
-		shortestPath(from, from, to, Map(from -> List()))
-	}
-
-	/**
-	 * Note that this is recursive (but not tail recursive) and will stack
-	 * overflow for very large graphs
-	 */
-	def shortestPath(from: Node, current: Node, to: Node, distances: PathMap): PathMap = {
-		if (current == to) {
-			distances
-		} else {
-			val nextEdges = edges.get(current)
-			val newMap = nextEdges.map(_.foldLeft(distances)((pathMap, e) => {
-				val next = nextNode(current, e)
-				val t = computePath(pathMap, current, e, next)
-				t match {
-					case (map, b) => if (!b) map else shortestPath(from, next, to, map)
-				}
-			}))
-			newMap.getOrElse(distances)
-		}
-	}
-
 	/**
 	 * Returns a tuple of the path map and whether this new route is shorter and
 	 * should be followed further
 	 */
 	def computePath(map: PathMap, current: Node, e: Edge, next: Node): (PathMap, Boolean) = {
-		val previousDistance = distance(map, next) 
+		val previousDistance = distance(map, next)
 		val tuple = for {
 			distanceThisWay <- distance(map, current).map(_ + e.distance)
 			newList <- map.get(current).map(e :: _)
 		} yield (computePath(next, previousDistance, distanceThisWay, map, newList))
 		tuple.getOrElse((map, true))
 	}
-
 
 	/**
 	 * Returns the PathMap of distances and whether the new path is shorter and thus
@@ -128,6 +90,44 @@ case class Graph(nodes: Set[Node], edges: EdgeMap) {
 				(distances + ((node, list)), true)
 			}
 		}).getOrElse((distances + ((node, list)), true))
+	}
+
+	/**
+	 * Note that this is recursive (but not tail recursive) and will stack
+	 * overflow for very large graphs
+	 */
+	def shortestPath(from: Node, current: Node, to: Node, edgeMap: EdgeMap, distances: PathMap): PathMap = {
+		if (current == to) {
+			distances
+		} else {
+			val nextEdges = edgeMap.get(current)
+			val newMap = nextEdges.map(_.foldLeft(distances)((pathMap, e) => {
+				val next = nextNode(current, e)
+				val t = computePath(pathMap, current, e, next)
+				t match {
+					case (map, b) => if (!b) map else shortestPath(from, next, to, edgeMap, map)
+				}
+			}))
+			newMap.getOrElse(distances)
+		}
+	}
+
+}
+
+case class Graph(nodes: Set[Node], edges: EdgeMap) {
+
+	import Graph._
+
+	def shortestPath(from: NodeId, to: NodeId): PathMap = {
+		shortestPath(Node(from), Node(to))
+	}
+
+	def shortestPath(from: Node, to: Node): PathMap = {
+		shortestPath(from, from, to, Map(from -> List()))
+	}
+
+	def shortestPath(from: Node, current: Node, to: Node, distances: PathMap): PathMap = {
+		Graph.shortestPath(from, current, to, edges, distances)
 	}
 
 }
