@@ -10,5 +10,8 @@ package object graph {
   val MinWeight = Int.MinValue
 
   type DistanceMap = Map[Node, List[Edge]]
+	type SimpleGraph = Map[String, List[(String, Weight)]]
+	type NodeName = String
+
 
 }

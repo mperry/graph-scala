@@ -1,5 +1,5 @@
 package com.github.mperry.graph
 
-case class Node(name: String) {
+case class Node(name: NodeName) {
 
 }
