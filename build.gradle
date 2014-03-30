@@ -15,6 +15,14 @@ defaultTasks "build"
 
 mainClassName = "com.github.mperry.graph.Solution"
 
+run {
+    if (project.hasProperty("args")) {
+//        def a = project.args
+//        a.split
+        args project.args
+    }
+}
+
 // In this section you declare where to find the dependencies of your project
 repositories {
     // Use 'maven central' for resolving your dependencies.
