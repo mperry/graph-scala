@@ -57,4 +57,9 @@ class Test1 extends FunSuite {
 		assert(checkDistance(pathMap, "D", 230))
 	}
 
+	test("a to f") {
+		val map = toGraph(standardGraph).shortestPath("A", "F")
+		assert(checkDistance(map, "F", 360))
+	}
+
 }
