@@ -1,7 +1,7 @@
 package com.github.mperry.graph
 
 import com.github.mperry.graph.json.JsonHelper.JsonNodeMap
-import Path._
+import PathMap._
 
 object Graph {
 
@@ -26,14 +26,20 @@ object Graph {
 
 	def toGraph(g: SimpleGraph): Graph = {
 		val t = process(g)
-		Graph(t._1, edgeMap(t._2))
+		Graph(edgeMap(t._2))
 	}
 
 	def edgeMap(edges: Set[Edge]): EdgeMap = {
 		val empty = Map.empty[Node, Map[Node, Edge]]
 		edges.foldLeft(empty)((m, e) => {
-			addToEdgeMap(addToEdgeMap(m, e.from, e.to, e.distance), e.to, e.from, e.distance)
+			addBothToEdgeMap(m, e.from, e.to, e.distance)
+//			addToEdgeMap(addToEdgeMap(m, e.from, e.to, e.distance), e.to, e.from, e.distance)
 		})
+	}
+
+	def addBothToEdgeMap(m: EdgeMap, n1: Node, n2: Node, w: Weight): EdgeMap = {
+		addToEdgeMap(addToEdgeMap(m, n1, n2, w), n2, n1, w)
+
 	}
 
 	def addToEdgeMap(m: EdgeMap, n1: Node, n2: Node, w: Weight): EdgeMap = {
@@ -67,9 +73,9 @@ object Graph {
 	 * should be followed further
 	 */
 	def computePath(map: PathMap, current: Node, e: Edge, next: Node): (PathMap, Boolean) = {
-		val previousDistance = Path.distance(map, next)
+		val previousDistance = PathMap.distance(map, next)
 		val tuple = for {
-			distanceThisWay <- Path.distance(map, current).map(_ + e.distance)
+			distanceThisWay <- PathMap.distance(map, current).map(_ + e.distance)
 			newList <- map.get(current).map(e :: _)
 		} yield (computePath(next, previousDistance, distanceThisWay, map, newList))
 		tuple.getOrElse((map, true))
@@ -125,7 +131,7 @@ object Graph {
 			val subMap = m.-(n2)
 			em + ((n1, subMap))
 		}).getOrElse(g.edges)
-		Graph(g.nodes, e)
+		Graph(e)
 	}
 
 	/**
@@ -139,8 +145,8 @@ object Graph {
 					kv match {
 						case (n2, d) => {
 							val node2 = Node(n2)
-							val g2 = removeBoth(acc, node1, node2)
-							val g3 = Graph(g2.nodes, addToEdgeMap(g2.edges, node1, node2, d))
+							  val g2 = removeBoth(acc, node1, node2)
+							val g3 = Graph(addBothToEdgeMap(g2.edges, node1, node2, d))
 							g3
 						}
 					}
@@ -151,7 +157,9 @@ object Graph {
 
 }
 
-case class Graph(nodes: Set[Node], edges: EdgeMap) {
+case class Graph(
+//					nodes: Set[Node],
+					edges: EdgeMap) {
 
 	import Graph._
 

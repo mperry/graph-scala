@@ -11,7 +11,7 @@ object Repl {
 
 	def main(args: Array[String]) = {
 		if (args.length < 1) {
-			println("No command line argument for input file found.")
+			println("No command line argument for input file")
 		} else {
 			val filename = args(0)
 			println(s"filename: $filename")
@@ -29,10 +29,10 @@ object Repl {
 	def processJson(json: String) = {
 		println(s"json: $json")
 		val og = JsonHelper.parseJson(json)
-		val og2 = og.map(g => {
-			def g2 = Graph.toGraph(g)
-			println(s"graph: $g2")
-			repl(g2)
+		val og2 = og.map(sg => {
+			def g = Graph.toGraph(sg)
+			println(s"graph: $g")
+			repl(g)
 		})
 	}
 
@@ -50,7 +50,7 @@ object Repl {
 	}
 
 	def repl(g: Graph) = {
-		println("Enter q to quit or json text")
+		println("Enter q to quit or json text to search or modify graph")
 		step(g)
 	}
 
@@ -59,6 +59,7 @@ object Repl {
 	}
 
 	def processSearch(g: Graph, s: Search): Graph = {
+		println(s"search: $s")
 		def m = g.shortestPath(s.start, s.end)
 		val optDist = m.get(Node(s.end)).map(d => Distance(Graph.distance(d)))
 		val default = jSingleObject("error", jString("some error"))
@@ -68,20 +69,28 @@ object Repl {
 	}
 
 	def processSearch(g: Graph, text: String): Option[Graph] = {
-		Search.parse(text).map(processSearch(g, _))
+		Search.parseSearch(text).map(processSearch(g, _))
 	}
 
 	def processMod(g: Graph, text: String): Option[Graph] = {
-		val o = Parse.parseOption(text).flatMap(JsonHelper.parseNode(_))
-		o.map(nt => Graph.mod(g, nt))
+//		val o = Parse.parseOption(text).flatMap(JsonHelper.parseNodeMap(_))
+		val o = JsonHelper.parseNodeMap(text)
+		o.map(nt => {
+			println(s"modify: $nt")
+			def result = Graph.mod(g, nt)
+			println(s"new graph: $result")
+			result
+		})
 	}
 
 	def processLine(g: Graph, text: String): Graph = {
-		println(s"You entered $text")
+//		println(s"You entered $text")
 		val o2 = processSearch(g, text)
 		val o3 = processMod(g, text)
-		println(s"search: $o2 mod: $o3")
-		o2.orElse(o3).getOrElse(g)
+//		println(s"search: $o2 mod: $o3")
+		val result = o2.orElse(o3).getOrElse(g)
+//		println(s"graph state: $result")
+		result
 	}
 
 }

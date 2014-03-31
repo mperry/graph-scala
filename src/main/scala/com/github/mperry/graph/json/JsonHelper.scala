@@ -20,12 +20,16 @@ object JsonHelper {
 		og.flatMap(_.toSimpleGraph)
 	}
 
+	def parseNodeMap(text: String): Option[JsonNodeMap] = {
+		Parse.parseOption(text).flatMap(JsonHelper.parseNodeMap(_))
+	}
+
 	/**
 	 * Example: parse(""" {"A": { "B": 100, "C": 30 }} """)
 	 * @param json
 	 * @return
 	 */
-	def parseNode(json: Json): Option[JsonNodeMap] = {
+	def parseNodeMap(json: Json): Option[JsonNodeMap] = {
 		json.assoc.flatMap(list => {
 			list.head match {
 				case (f, j) => {

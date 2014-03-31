@@ -39,7 +39,7 @@ class JsonHelperTest extends FunSuite {
 			   {"A": { "B": 100, "C": 30 }}
 			"""
 		val o = Parse.parseOption(json)
-		val z = o.flatMap(j => JsonHelper.parseNode(j))
+		val z = o.flatMap(j => JsonHelper.parseNodeMap(j))
 		//		println(z)
 		assert(z == Some(("A", expectedWeightMap)))
 	}

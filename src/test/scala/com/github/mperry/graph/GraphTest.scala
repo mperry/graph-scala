@@ -5,6 +5,7 @@ import org.scalatest.junit.JUnitRunner
 import org.scalatest.FunSuite
 
 import Graph._
+import com.github.mperry.graph.json.JsonHelper
 
 /**
  * Created by MarkPerry on 30/03/2014.
@@ -12,6 +13,13 @@ import Graph._
 
 @RunWith(classOf[JUnitRunner])
 class GraphTest extends FunSuite {
+
+	def trivialGraph: SimpleGraph = {
+		Map(
+			"A" -> Map("B" -> 100)
+		)
+	}
+
 
 	def simpleGraph: SimpleGraph = {
 		Map(
@@ -33,7 +41,7 @@ class GraphTest extends FunSuite {
 	}
 
 	def checkDistance(d: PathMap, id: NodeId, w: Weight): Boolean = {
-		Path.distance(d, id).map(_ == w).getOrElse(false)
+		PathMap.distance(d, id).map(_ == w).getOrElse(false)
 	}
 
 	test("no steps for simple graph") {
@@ -60,6 +68,21 @@ class GraphTest extends FunSuite {
 	test("a to f") {
 		val map = toGraph(standardGraph).shortestPath("A", "F")
 		assert(checkDistance(map, "F", 360))
+	}
+
+	test("add") {
+		//
+		val g = toGraph(trivialGraph)
+		println(g)
+		val s = """ {"A": { "C": 30 } } """
+		val o = JsonHelper.parseNodeMap(s)
+		o.map(tuple => {
+//			println(s"modify: $tuple")
+			def result = Graph.mod(g, tuple)
+			println(s"new graph: $result")
+			result
+		})
+
 	}
 
 }

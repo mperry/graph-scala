@@ -14,7 +14,7 @@ object Search {
 	implicit def SearchCodecJson: CodecJson[Search] =
 		casecodec2(Search.apply, Search.unapply)("start", "end")
 
-	def parse(json: String): Option[Search] = {
+	def parseSearch(json: String): Option[Search] = {
 		json.decodeOption[Search]
 	}
 
