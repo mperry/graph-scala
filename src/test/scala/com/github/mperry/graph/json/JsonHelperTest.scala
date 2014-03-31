@@ -4,7 +4,7 @@ import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.FunSuite
 import argonaut.Parse
-import com.github.mperry.graph.json.JsonHelper.WeightMap
+import com.github.mperry.graph.json.JsonHelper.JsonWeightMap
 
 
 import argonaut._, Argonaut._
@@ -29,7 +29,7 @@ class JsonHelperTest extends FunSuite {
 		assert(z == Some(expectedWeightMap))
 	}
 
-	def expectedWeightMap: WeightMap = {
+	def expectedWeightMap: JsonWeightMap = {
 		Map("B" -> 100, "C" -> 30)
 	}
 

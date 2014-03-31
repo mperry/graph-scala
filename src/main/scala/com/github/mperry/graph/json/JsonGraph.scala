@@ -2,7 +2,7 @@ package com.github.mperry.graph.json
 
 import argonaut._, Argonaut._
 import scalaz._, Scalaz._
-import com.github.mperry.graph.json.JsonHelper.NodeTuple
+import com.github.mperry.graph.json.JsonHelper.JsonNodeMap
 import com.github.mperry.graph.{Weight, NodeId, SimpleGraph}
 
 /**
@@ -10,8 +10,8 @@ import com.github.mperry.graph.{Weight, NodeId, SimpleGraph}
  */
 case class JsonGraph(map: List[Json]) {
 
-	def toListNodeTuple: Option[List[NodeTuple]] = {
-		val a = Some(Nil): Option[List[NodeTuple]]
+	def toListNodeTuple: Option[List[JsonNodeMap]] = {
+		val a = Some(Nil): Option[List[JsonNodeMap]]
 		map.foldLeft(a)((acc, json) => {
 			val onm = JsonHelper.parseNode(json)
 			acc.flatMap(list => onm.map(nm => nm::list))

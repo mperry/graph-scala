@@ -11,9 +11,9 @@ import scalaz._, Scalaz._
 object JsonHelper {
 
 	// WeightMap represents json """{ "B": 100, "C": 30 }"""
-	type WeightMap = Map[String, Int]
+	type JsonWeightMap = Map[String, Int]
 	// NodeTuple represents json """ {"A": { "B": 100, "C": 30 }} """
-	type NodeTuple = (String, WeightMap)
+	type JsonNodeMap = (String, JsonWeightMap)
 
 	def parseJson(json: String): Option[SimpleGraph] = {
 		val og = json.decodeOption[JsonGraph]
@@ -25,7 +25,7 @@ object JsonHelper {
 	 * @param json
 	 * @return
 	 */
-	def parseNode(json: Json): Option[NodeTuple] = {
+	def parseNode(json: Json): Option[JsonNodeMap] = {
 		json.assoc.flatMap(list => {
 			list.head match {
 				case (f, j) => {
@@ -41,7 +41,7 @@ object JsonHelper {
 	 * @param json
 	 * @return
 	 */
-	def parseEdgeWeights(json: Json): Option[WeightMap] = {
+	def parseEdgeWeights(json: Json): Option[JsonWeightMap] = {
 		json.assoc.flatMap(list => {
 			val optMap = Some(Map.empty[String, Int]): Option[Map[String, Int]]
 			list.foldLeft(optMap) ((acc, t) => {

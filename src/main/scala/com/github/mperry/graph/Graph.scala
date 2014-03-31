@@ -1,6 +1,6 @@
 package com.github.mperry.graph
 
-import com.github.mperry.graph.json.JsonHelper.NodeTuple
+import com.github.mperry.graph.json.JsonHelper.JsonNodeMap
 import Path._
 
 object Graph {
@@ -131,7 +131,7 @@ object Graph {
 	/**
 	 * Example: """ {"A": { "B": 100, "C": 30 }} """
 	 */
-	def mod(g: Graph, nt: NodeTuple): Graph = {
+	def mod(g: Graph, nt: JsonNodeMap): Graph = {
 		nt match {
 			case (n1, m) =>
 				val node1 = Node(n1)
