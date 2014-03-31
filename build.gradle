@@ -24,4 +24,7 @@ dependencies {
 
     testCompile 'junit:junit:4.11'
     testCompile 'org.scalatest:scalatest_2.10:2.0'
+    testCompile 'org.scalacheck:scalacheck_2.10:1.11.3'
+
+
 }
