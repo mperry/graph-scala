@@ -70,19 +70,30 @@ class GraphTest extends FunSuite {
 		assert(checkDistance(map, "F", 360))
 	}
 
-	test("add") {
-		//
-		val g = toGraph(trivialGraph)
-		println(g)
+	test("add path") {
 		val s = """ {"A": { "C": 30 } } """
-		val o = JsonHelper.parseNodeMap(s)
-		o.map(tuple => {
-//			println(s"modify: $tuple")
-			def result = Graph.mod(g, tuple)
-			println(s"new graph: $result")
-			result
-		})
-
+		val expected =
+			Map (
+				"A" -> Map("B" -> 100, "C" -> 30)
+			)
+		assert(checkGraph(trivialGraph, s, expected))
 	}
+
+	test("add change path") {
+		val s = """ {"A": { "B": 80, "C": 30 } } """
+		val expected = Map(
+			"A" -> Map("B" -> 80, "C" -> 30)
+		)
+		assert(checkGraph(trivialGraph, s, expected))
+	}
+
+	def checkGraph(g: SimpleGraph, json: String, expected: SimpleGraph): Boolean = {
+		val o = JsonHelper.parseNodeMap(json)
+		o.map(tuple => {
+			Graph.mod(toGraph(g), tuple) == toGraph(expected)
+		}).getOrElse(false)
+	}
+
+
 
 }

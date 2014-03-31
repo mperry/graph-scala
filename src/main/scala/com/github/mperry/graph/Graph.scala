@@ -144,7 +144,7 @@ object Graph {
 					kv match {
 						case (n2, d) => {
 							val node2 = Node(n2)
-							  val g2 = removeBoth(acc, node1, node2)
+							val g2 = removeBoth(acc, node1, node2)
 							val g3 = Graph(addBothToEdgeMap(g2.edges, node1, node2, d))
 							g3
 						}
