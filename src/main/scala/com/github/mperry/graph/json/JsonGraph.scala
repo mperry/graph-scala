@@ -19,8 +19,6 @@ case class JsonGraph(map: List[Json]) {
 	}
 	
 	def toSimpleGraph: Option[SimpleGraph] = {
-
-		// m: SimpleGraph
 		val m = Map.empty[NodeId, Map[NodeId, Weight]]
 		toListNodeTuple.map(nodeTuples => {
 			// return SimpleGraph
@@ -36,13 +34,9 @@ case class JsonGraph(map: List[Json]) {
 							acc2 + ((id, newMap))
 						}
 					}
-
 				})
-			
 			})
 		})
-		
-		
 	}
 	
 }

@@ -13,13 +13,11 @@ apply plugin: "application"
 
 defaultTasks "build"
 
-mainClassName = "com.github.mperry.graph.Solution"
+mainClassName = "com.github.mperry.graph.Repl"
 
 run {
     standardInput = System.in
     if (project.hasProperty("args")) {
-//        def a = project.args
-//        a.split
         args project.args
     }
 }

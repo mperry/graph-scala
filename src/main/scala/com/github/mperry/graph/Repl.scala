@@ -3,22 +3,20 @@ package com.github.mperry.graph
 import scala.io.Source
 import com.github.mperry.graph.json.{Distance, Search, JsonHelper}
 import scala.annotation.tailrec
-
-
-
 import argonaut._, Argonaut._
-import scalaz._, Scalaz._
 
+object Repl {
 
-
-//import Distance._
-
-object Solution {
+	val quitText = "q"
 
 	def main(args: Array[String]) = {
-		val filename = args(0)
-		println(s"filename: $filename")
-		process(filename)
+		if (args.length < 1) {
+			println("No command line argument for input file found.")
+		} else {
+			val filename = args(0)
+			println(s"filename: $filename")
+			process(filename)
+		}
 	}
 
 	def process(filename: String) = {
@@ -47,7 +45,6 @@ object Solution {
 	def step(g: Graph): Unit = {
 		val line = nextLine("> ")
 		if (!isQuit(line)) {
-
 			step(processLine(g, line))
 		}
 	}
@@ -58,7 +55,7 @@ object Solution {
 	}
 
 	def isQuit(s: String): Boolean = {
-		s.trim() == "q"
+		s.trim() == quitText
 	}
 
 	def processSearch(g: Graph, s: Search): Graph = {
@@ -81,13 +78,10 @@ object Solution {
 
 	def processLine(g: Graph, text: String): Graph = {
 		println(s"You entered $text")
-
-//		val o = Search.parse(text).map(processSearch(g, _))
 		val o2 = processSearch(g, text)
 		val o3 = processMod(g, text)
 		println(s"search: $o2 mod: $o3")
 		o2.orElse(o3).getOrElse(g)
-
 	}
 
 }

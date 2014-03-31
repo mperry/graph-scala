@@ -1,8 +1,6 @@
 package com.github.mperry.graph
 
 import com.github.mperry.graph.json.JsonHelper.NodeTuple
-import com.github.mperry.graph.json.JsonHelper
-//import com.sun.corba.se.impl.orbutil.graph.Graph
 
 object Graph {
 
@@ -36,7 +34,6 @@ object Graph {
 
 	def edgeMap(edges: Set[Edge]): EdgeMap = {
 		val empty = Map.empty[Node, Map[Node, Edge]]
-//		val empty = Map.empty[Node, List[Edge]]
 		edges.foldLeft(empty)((m, e) => {
 			addToEdgeMap(addToEdgeMap(m, e.from, e.to, e.distance), e.to, e.from, e.distance)
 		})
@@ -142,9 +139,6 @@ object Graph {
 	 * Example: """ {"A": { "B": 100, "C": 30 }} """
 	 */
 	def mod(g: Graph, nt: NodeTuple): Graph = {
-
-		// TODO
-
 		nt match {
 			case (n1, m) =>
 				val node1 = Node(n1)

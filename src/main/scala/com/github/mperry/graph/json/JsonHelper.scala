@@ -2,30 +2,22 @@ package com.github.mperry.graph.json
 
 import argonaut.Json
 import com.github.mperry.graph.{SimpleGraph, NodeId}
-
-//import StringUtils._
-//import StringUtils._
-
-
-
 import argonaut._, Argonaut._
 import scalaz._, Scalaz._
-
 
 /**
  * Created by MarkPerry on 30/03/2014.
  */
 object JsonHelper {
 
+	// WeightMap represents json """{ "B": 100, "C": 30 }"""
+	type WeightMap = Map[String, Int]
+	// NodeTuple represents json """ {"A": { "B": 100, "C": 30 }} """
+	type NodeTuple = (String, WeightMap)
+
 	def parseJson(json: String): Option[SimpleGraph] = {
 		val og = json.decodeOption[JsonGraph]
-		//		println(og)
-		val z = og.flatMap(g => g.toListNodeTuple)
-//		println(z)
-		val y = og.flatMap(_.toSimpleGraph)
-//		println(y)
-		y
-
+		og.flatMap(_.toSimpleGraph)
 	}
 
 	// this should be handled by an implicit conversion, but can't find the right one right now
@@ -35,11 +27,7 @@ object JsonHelper {
 		} catch {
 			case e: Exception => None
 		}
-
 	}
-
-	type WeightMap = Map[String, Int]
-	type NodeTuple = (String, WeightMap)
 
 	/**
 	 * Example: parse(""" {"A": { "B": 100, "C": 30 }} """)
@@ -48,16 +36,12 @@ object JsonHelper {
 	 */
 	def parseNode(json: Json): Option[NodeTuple] = {
 		json.assoc.flatMap(list => {
-
 			list.head match {
 				case (f, j) => {
 					val owm = parseEdgeWeights(j)
 					owm.map((f, _))
 				}
-
 			}
-
-
 		})
 	}
 
@@ -79,7 +63,6 @@ object JsonHelper {
 				})
 			})
 		})
-
 	}
 
 }

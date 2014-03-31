@@ -3,16 +3,11 @@ package com.github.mperry.graph.json
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.FunSuite
-
-
 import argonaut._, Argonaut._
-
 
 /**
  * Created by MarkPerry on 30/03/2014.
  */
-
-
 object JsonTest {
 
 	def input: String = {
@@ -35,15 +30,9 @@ object JsonTest {
 @RunWith(classOf[JUnitRunner])
 class JsonTest extends FunSuite {
 
-	test("true") {
-		assert(true)
-	}
-
-
 	def parse(json: String) = {
 		val og = json.decodeOption[JsonGraph]
 		println(og)
 	}
-
 
 }
