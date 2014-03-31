@@ -2,7 +2,6 @@ package com.github.mperry.graph
 
 import scala.io.Source
 import com.github.mperry.graph.json.JsonHelper
-import scala.util.control.TailCalls.TailRec
 import scala.annotation.tailrec
 
 object Solution {
