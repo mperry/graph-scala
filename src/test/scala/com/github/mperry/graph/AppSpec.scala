@@ -4,7 +4,7 @@ import org.scalacheck._
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.FunSuite
-import com.github.mperry.graph.json.DistanceSpec
+import com.github.mperry.graph.json.{SearchSpec, DistanceSpec}
 
 /**
  * Created by MarkPerry on 1/04/2014.
@@ -12,6 +12,7 @@ import com.github.mperry.graph.json.DistanceSpec
 object AppSpec extends Properties("AppSpec") {
 	include(StringSpec)
 	include(DistanceSpec)
+	include(SearchSpec)
 
 }
 

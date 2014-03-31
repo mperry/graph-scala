@@ -11,8 +11,11 @@ case class Search(start: String, end: String) {
 
 object Search {
 
+	val startKey = "start"
+	val endKey = "end"
+
 	implicit def SearchCodecJson: CodecJson[Search] =
-		casecodec2(Search.apply, Search.unapply)("start", "end")
+		casecodec2(Search.apply, Search.unapply)(startKey, endKey)
 
 	def parseSearch(json: String): Option[Search] = {
 		json.decodeOption[Search]
