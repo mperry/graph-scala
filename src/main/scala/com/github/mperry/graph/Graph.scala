@@ -30,7 +30,7 @@ object Graph {
 	}
 
 	def edgeMap(edges: Set[Edge]): EdgeMap = {
-		val empty = Map.empty[Node, Map[Node, Edge]]
+		val empty = Map.empty[Node, Map[Node, Weight]]
 		edges.foldLeft(empty)((m, e) => {
 			addBothToEdgeMap(m, e.from, e.to, e.distance)
 //			addToEdgeMap(addToEdgeMap(m, e.from, e.to, e.distance), e.to, e.from, e.distance)
@@ -44,10 +44,10 @@ object Graph {
 
 	def addToEdgeMap(m: EdgeMap, n1: Node, n2: Node, w: Weight): EdgeMap = {
 		val e = createEdge(n1, n2, w)
-		val t = (n1, Map(n2 -> e))
+		val t = (n1, Map(n2 -> w))
 		val defaultMap: EdgeMap = m + t
 		m.get(n1).map(m2 => {
-			m + ((n1, m2 + ((n2, e))))
+			m + ((n1, m2 + ((n2, w))))
 		}).getOrElse(defaultMap)
 	}
 
@@ -64,19 +64,19 @@ object Graph {
 		list.foldLeft(0)((d, e) => d + e.distance)
 	}
 
-	def nextNode(current: Node, edge: Edge): Node = {
-		if (edge.from == current) edge.to else edge.from
+	def nextNode(current: Node, from: Node, to: Node): Node = {
+		if (from == current) to else from
 	}
 
 	/**
 	 * Returns a tuple of the path map and whether this new route is shorter and
 	 * should be followed further
 	 */
-	def computePath(map: PathMap, current: Node, e: Edge, next: Node): (PathMap, Boolean) = {
+	def computePath(map: PathMap, current: Node, w: Weight, next: Node): (PathMap, Boolean) = {
 		val previousDistance = PathMap.distance(map, next)
 		val tuple = for {
-			distanceThisWay <- PathMap.distance(map, current).map(_ + e.distance)
-			newList <- map.get(current).map(e :: _)
+			distanceThisWay <- PathMap.distance(map, current).map(_ + w)
+			newList <- map.get(current).map(createEdge(current, next, w) :: _)
 		} yield (computePath(next, previousDistance, distanceThisWay, map, newList))
 		tuple.getOrElse((map, true))
 	}
@@ -106,15 +106,14 @@ object Graph {
 			val nextEdgesMap = edgeMap.get(current)
 			val newMap = nextEdgesMap.map(_.foldLeft(distances)((pathMap, kv) => {
 				kv match {
-					case (n, e) => {
-						val next = nextNode(current, e)
-						val t = computePath(pathMap, current, e, next)
+					case (n, w) => {
+						val next = nextNode(current, current, n)
+						val t = computePath(pathMap, current, w, next)
 						t match {
 							case (map, b) => if (!b) map else shortestPath(from, next, to, edgeMap, map)
 						}
 					}
 				}
-
 			}))
 			newMap.getOrElse(distances)
 		}
