@@ -20,6 +20,9 @@ object JsonHelper {
 		og.flatMap(_.toSimpleGraph)
 	}
 
+	/**
+	 * Example: parse(""" {"A": { "B": 100, "C": 30 }} """)
+	 */
 	def parseNodeMap(text: String): Option[JsonNodeMap] = {
 		Parse.parseOption(text).flatMap(JsonHelper.parseNodeMap(_))
 	}
@@ -38,6 +41,13 @@ object JsonHelper {
 				}
 			}
 		})
+	}
+
+	/**
+	 * Example: parse("""{ "B": 100, "C": 30 }""")
+	 */
+	def parseEdgeWeights(json: String): Option[JsonWeightMap] = {
+		Parse.parseOption(json).flatMap(parseEdgeWeights(_))
 	}
 
 	/**

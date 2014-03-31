@@ -4,12 +4,15 @@ import org.scalacheck._
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.FunSuite
+import com.github.mperry.graph.json.DistanceSpec
 
 /**
  * Created by MarkPerry on 1/04/2014.
  */
 object AppSpec extends Properties("AppSpec") {
 	include(StringSpec)
+	include(DistanceSpec)
+
 }
 
 @RunWith(classOf[JUnitRunner])
