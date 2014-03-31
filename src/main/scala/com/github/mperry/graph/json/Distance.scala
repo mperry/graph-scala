@@ -15,16 +15,18 @@ case class Distance(distance: Int) {
 	// Workaround: I had trouble getting the implicit DistanceEncodeJson to work,
 	// so created toJson to workaround the issue
 	def toJson: Json = {
-		jSingleObject("distance", jNumber(distance))
+		jSingleObject(Distance.fieldName, jNumber(distance))
 	}
 }
 
 object Distance {
 
+	val fieldName = "distance"
+
 	implicit def DistanceCodecJson: CodecJson[Distance] =
-		casecodec1(Distance.apply, Distance.unapply)("distance")
+		casecodec1(Distance.apply, Distance.unapply)(fieldName)
 
 	implicit def DistanceEncodeJson: EncodeJson[Distance] =
-		EncodeJson((d: Distance) => ("distance" := d.distance) ->: jEmptyObject)
+		EncodeJson((d: Distance) => (fieldName := d.distance) ->: jEmptyObject)
 
 }

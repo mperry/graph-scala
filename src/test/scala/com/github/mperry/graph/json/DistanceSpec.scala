@@ -25,7 +25,7 @@ object DistanceSpec extends Properties("DistanceSpec") {
 
 	def fromJson(json: Json): Option[String] = {
 		val o = json.obj
-		val field = o.flatMap(_.toMap.get("distance"))
+		val field = o.flatMap(_.toMap.get(Distance.fieldName))
 		val result = field.flatMap(_.number).map(_.toInt.toString)
 		result
 	}
