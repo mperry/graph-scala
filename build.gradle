@@ -16,6 +16,7 @@ defaultTasks "build"
 mainClassName = "com.github.mperry.graph.Solution"
 
 run {
+    standardInput = System.in
     if (project.hasProperty("args")) {
 //        def a = project.args
 //        a.split

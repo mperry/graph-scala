@@ -1,15 +1,32 @@
 package com.github.mperry.graph.json
 
 import argonaut.Json
-import com.github.mperry.graph.NodeId
+import com.github.mperry.graph.{SimpleGraph, NodeId}
 
 //import StringUtils._
 //import StringUtils._
+
+
+
+import argonaut._, Argonaut._
+import scalaz._, Scalaz._
+
 
 /**
  * Created by MarkPerry on 30/03/2014.
  */
 object JsonHelper {
+
+	def parseJson(json: String): Option[SimpleGraph] = {
+		val og = json.decodeOption[JsonGraph]
+		//		println(og)
+		val z = og.flatMap(g => g.toListNodeTuple)
+//		println(z)
+		val y = og.flatMap(_.toSimpleGraph)
+//		println(y)
+		y
+
+	}
 
 	// this should be handled by an implicit conversion, but can't find the right one right now
 	def parseInt(s: String): Option[Int] = {

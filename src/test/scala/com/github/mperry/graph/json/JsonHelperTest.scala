@@ -61,7 +61,9 @@ class JsonHelperTest extends FunSuite {
 	}
 
 	test("parseMap") {
-		parse(input)
+		val og = JsonHelper.parseJson(input)
+		println(og)
+//		parse(input)
 	}
 
 	def parse(json: String) = {
