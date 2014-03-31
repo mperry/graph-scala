@@ -1,7 +1,7 @@
 package com.github.mperry.graph
 
 import scala.io.Source
-import com.github.mperry.graph.json.JsonHelper
+import com.github.mperry.graph.json.{Search, JsonHelper}
 import scala.annotation.tailrec
 
 object Solution {
@@ -38,7 +38,7 @@ object Solution {
 	def step(g: Graph): Unit = {
 		val line = nextLine("> ")
 		if (!isQuit(line)) {
-			processLine(line)
+			processLine(g, line)
 			step(g)
 		}
 	}
@@ -52,8 +52,15 @@ object Solution {
 		s.trim() == "q"
 	}
 
-	def processLine(text: String) = {
+	def processLine(g: Graph, text: String) = {
 		println(s"You entered $text")
+		def os = Search.parse(text)
+		os.map(s => {
+			def m = g.shortestPath(s.start, s.end)
+			val d = m.get(Node(s.end)).map(Graph.distance(_).toString).getOrElse("no path")
+			println(s"distance from ${s.start} to ${s.end} is $d")
+
+		})
 	}
 
 }
