@@ -1,12 +1,9 @@
 package com.github.mperry.graph
 
 import com.github.mperry.graph.json.JsonHelper.NodeTuple
+import Path._
 
 object Graph {
-
-	def distance(m: PathMap, n: NodeId): Option[Weight] = {
-		m.get(Node(n)).map(distance(_))
-	}
 
 	def process(g: SimpleGraph): (Set[Node], Set[Edge]) = {
 		val t = (Set.empty[Node], Set.empty[Edge])
@@ -61,10 +58,6 @@ object Graph {
 		list.foldLeft(0)((d, e) => d + e.distance)
 	}
 
-	def distance(map: PathMap, node: Node): Option[Weight] = {
-		map.get(node).map(distance(_))
-	}
-
 	def nextNode(current: Node, edge: Edge): Node = {
 		if (edge.from == current) edge.to else edge.from
 	}
@@ -74,9 +67,9 @@ object Graph {
 	 * should be followed further
 	 */
 	def computePath(map: PathMap, current: Node, e: Edge, next: Node): (PathMap, Boolean) = {
-		val previousDistance = distance(map, next)
+		val previousDistance = Path.distance(map, next)
 		val tuple = for {
-			distanceThisWay <- distance(map, current).map(_ + e.distance)
+			distanceThisWay <- Path.distance(map, current).map(_ + e.distance)
 			newList <- map.get(current).map(e :: _)
 		} yield (computePath(next, previousDistance, distanceThisWay, map, newList))
 		tuple.getOrElse((map, true))

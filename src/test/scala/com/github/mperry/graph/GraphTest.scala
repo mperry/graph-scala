@@ -33,7 +33,7 @@ class GraphTest extends FunSuite {
 	}
 
 	def checkDistance(d: PathMap, id: NodeId, w: Weight): Boolean = {
-		distance(d, id).map(_ == w).getOrElse(false)
+		Path.distance(d, id).map(_ == w).getOrElse(false)
 	}
 
 	test("no steps for simple graph") {

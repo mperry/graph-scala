@@ -20,15 +20,6 @@ object JsonHelper {
 		og.flatMap(_.toSimpleGraph)
 	}
 
-	// this should be handled by an implicit conversion, but can't find the right one right now
-	def parseInt(s: String): Option[Int] = {
-		try {
-			Some(s.toInt)
-		} catch {
-			case e: Exception => None
-		}
-	}
-
 	/**
 	 * Example: parse(""" {"A": { "B": 100, "C": 30 }} """)
 	 * @param json
