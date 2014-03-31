@@ -85,6 +85,7 @@ object Solution {
 //		val o = Search.parse(text).map(processSearch(g, _))
 		val o2 = processSearch(g, text)
 		val o3 = processMod(g, text)
+		println(s"search: $o2 mod: $o3")
 		o2.orElse(o3).getOrElse(g)
 
 	}

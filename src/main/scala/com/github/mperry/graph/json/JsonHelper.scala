@@ -57,20 +57,6 @@ object JsonHelper {
 
 			}
 
-//			val m = Some(Map.empty[String, WeightMap]): Option[Map[String, WeightMap]]
-//			list.foldLeft(m)((acc, t) => {
-//				t match {
-//					case (f, j) => {
-//						acc.flatMap(m => {
-//							val owm = parseEdgeWeights(j)
-//							owm.map(wm => {
-//								m + ((f, wm))
-//							})
-//
-//						})
-//					}
-//				}
-//			})
 
 		})
 	}

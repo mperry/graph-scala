@@ -19,3 +19,12 @@ gradle
 To run:
 gradle run -q -Pargs=input.json
 
+{ "start":"A", "end":"F" }
+>>
+360
+{ "A": {"B":80} }
+{ "start":"A", "end":"F" }
+>> 360 (no change)
+{ "A": {"C":20} }
+{ "start":"A", "end":"F" }
+>> 350

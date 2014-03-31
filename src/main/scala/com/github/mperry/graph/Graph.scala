@@ -1,6 +1,8 @@
 package com.github.mperry.graph
 
 import com.github.mperry.graph.json.JsonHelper.NodeTuple
+import com.github.mperry.graph.json.JsonHelper
+//import com.sun.corba.se.impl.orbutil.graph.Graph
 
 object Graph {
 
@@ -36,22 +38,17 @@ object Graph {
 		val empty = Map.empty[Node, Map[Node, Edge]]
 //		val empty = Map.empty[Node, List[Edge]]
 		edges.foldLeft(empty)((m, e) => {
-			edgeMap(edgeMap(m, e.from, e.to, e), e.to, e.from, e)
+			addToEdgeMap(addToEdgeMap(m, e.from, e.to, e.distance), e.to, e.from, e.distance)
 		})
 	}
 
-	def edgeMap(m: EdgeMap, n1: Node, n2: Node, e: Edge): EdgeMap = {
-//		val o = m.get(n)
-//		val edgeList = o.map(list => {
-//			e :: list
-//		}).getOrElse(List(e))
+	def addToEdgeMap(m: EdgeMap, n1: Node, n2: Node, w: Weight): EdgeMap = {
+		val e = createEdge(n1, n2, w)
 		val t = (n1, Map(n2 -> e))
 		val defaultMap: EdgeMap = m + t
 		m.get(n1).map(m2 => {
 			m + ((n1, m2 + ((n2, e))))
 		}).getOrElse(defaultMap)
-//		m
-//		m + ((n, edgeList))
 	}
 
 	def createEdge(x: NodeId, y: NodeId, w: Weight): Edge = {
@@ -127,10 +124,42 @@ object Graph {
 		}
 	}
 
+	def removeBoth(g: Graph, n1: Node, n2: Node): Graph = {
+		remove(remove(g, n1, n2), n2, n1)
+	}
+
+	def remove(g: Graph, n1: Node, n2: Node): Graph = {
+		val em = g.edges
+		val om = em.get(n1)
+		val e = om.map(m => {
+			val subMap = m.-(n2)
+			em + ((n1, subMap))
+		}).getOrElse(g.edges)
+		Graph(g.nodes, e)
+	}
+
+	/**
+	 * Example: """ {"A": { "B": 100, "C": 30 }} """
+	 */
 	def mod(g: Graph, nt: NodeTuple): Graph = {
+
 		// TODO
-		
-		g
+
+		nt match {
+			case (n1, m) =>
+				val node1 = Node(n1)
+				m.foldLeft(g)((acc, kv) => {
+					kv match {
+						case (n2, d) => {
+							val node2 = Node(n2)
+							val g2 = removeBoth(acc, node1, node2)
+							val g3 = Graph(g2.nodes, addToEdgeMap(g2.edges, node1, node2, d))
+							g3
+						}
+					}
+				})
+
+		}
 	}
 
 }

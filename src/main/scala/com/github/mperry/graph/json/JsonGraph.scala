@@ -34,14 +34,10 @@ case class JsonGraph(map: List[Json]) {
 						case (s, i) => {
 							val newMap = acc2.get(id).map(oldMap => oldMap + ((s, i))).getOrElse(Map(s -> i))
 							acc2 + ((id, newMap))
-//							m + (id, m.get(id).map(list => (s, i)::list).getOrElse(List((s, i))))
-//							acc + (nt._1)
-
 						}
 					}
 
 				})
-//				m + (nt._1, nt._2)
 			
 			})
 		})
