@@ -1,0 +1,29 @@
+filename: input.json
+json: 	{
+				"map": [
+					{"A": { "B": 100, "C": 30 }},
+					{"B": { "F": 300}},
+					{"C": { "D": 200}},
+					{"D": { "H": 90, "E":80}},
+					{"E": { "H": 30, "G":150, "F":50}},
+					{"F": { "G":70}},
+					{"G": { "H":50}}
+				]
+			}
+graph: Graph(Map(Node(B) -> Map(Node(F) -> 300, Node(A) -> 100), Node(C) -> Map(Node(D) -> 200, Node(A) -> 30), Node(E) -> Map(Node(D) -> 80, Node(H) -> 30, Node(G) -> 150, Node(F) -> 50), Node(A) -> Map(Node(B) -> 100, Node(C) -> 30), Node(H) -> Map(Node(D) -> 90, Node(E) -> 30, Node(G) -> 50), Node(G) -> Map(Node(E) -> 150, Node(H) -> 50, Node(F) -> 70), Node(F) -> Map(Node(B) -> 300, Node(E) -> 50, Node(G) -> 70), Node(D) -> Map(Node(H) -> 90, Node(C) -> 200, Node(E) -> 80)))
+Enter q to quit or json text to search or modify graph
+> search: Search(A,F)
+{"distance":360}
+> modify: (A,Map(B -> 80))
+new graph: Graph(Map(Node(B) -> Map(Node(F) -> 300, Node(A) -> 80), Node(C) -> Map(Node(D) -> 200, Node(A) -> 30), Node(E) -> Map(Node(D) -> 80, Node(H) -> 30, Node(G) -> 150, Node(F) -> 50), Node(A) -> Map(Node(C) -> 30, Node(B) -> 80), Node(H) -> Map(Node(D) -> 90, Node(E) -> 30, Node(G) -> 50), Node(G) -> Map(Node(E) -> 150, Node(H) -> 50, Node(F) -> 70), Node(F) -> Map(Node(B) -> 300, Node(E) -> 50, Node(G) -> 70), Node(D) -> Map(Node(H) -> 90, Node(C) -> 200, Node(E) -> 80)))
+> search: Search(A,F)
+{"distance":360}
+> modify: (A,Map(C -> 20))
+new graph: Graph(Map(Node(B) -> Map(Node(F) -> 300, Node(A) -> 80), Node(C) -> Map(Node(D) -> 200, Node(A) -> 20), Node(E) -> Map(Node(D) -> 80, Node(H) -> 30, Node(G) -> 150, Node(F) -> 50), Node(A) -> Map(Node(B) -> 80, Node(C) -> 20), Node(H) -> Map(Node(D) -> 90, Node(E) -> 30, Node(G) -> 50), Node(G) -> Map(Node(E) -> 150, Node(H) -> 50, Node(F) -> 70), Node(F) -> Map(Node(B) -> 300, Node(E) -> 50, Node(G) -> 70), Node(D) -> Map(Node(H) -> 90, Node(C) -> 200, Node(E) -> 80)))
+> search: Search(A,F)
+{"distance":350}
+> modify: (B,Map(F -> 20))
+new graph: Graph(Map(Node(B) -> Map(Node(A) -> 80, Node(F) -> 20), Node(C) -> Map(Node(D) -> 200, Node(A) -> 20), Node(E) -> Map(Node(D) -> 80, Node(H) -> 30, Node(G) -> 150, Node(F) -> 50), Node(A) -> Map(Node(B) -> 80, Node(C) -> 20), Node(H) -> Map(Node(D) -> 90, Node(E) -> 30, Node(G) -> 50), Node(G) -> Map(Node(E) -> 150, Node(H) -> 50, Node(F) -> 70), Node(F) -> Map(Node(E) -> 50, Node(G) -> 70, Node(B) -> 20), Node(D) -> Map(Node(H) -> 90, Node(C) -> 200, Node(E) -> 80)))
+> search: Search(A,F)
+{"distance":100}
+> 

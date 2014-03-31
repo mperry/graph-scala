@@ -1,0 +1,8 @@
+{ "start":"A", "end":"F" }
+{ "A": {"B":80} }
+{ "start":"A", "end":"F" }
+{ "A": {"C":20} }
+{ "start":"A", "end":"F" }
+{ "B": {"F":20} }
+{ "start":"A", "end":"F" }
+q
