@@ -8,19 +8,9 @@ import org.scalacheck._
 object StringSpec extends Properties("StringSpec") {
 	import Prop.forAll
 
+	// write a simple property so I know this is integrated with the unit tests
 	property("startsWith") = forAll { (a: String, b: String) =>
 		(a+b).startsWith(a)
 	}
 
-	property("endsWith") = forAll { (a: String, b: String) =>
-		(a+b).endsWith(b)
-	}
-
-	property("substring") = forAll { (a: String, b: String) =>
-		(a+b).substring(a.length) == b
-	}
-
-	property("substring") = forAll { (a: String, b: String, c: String) =>
-		(a+b+c).substring(a.length, a.length+b.length) == b
-	}
 }
