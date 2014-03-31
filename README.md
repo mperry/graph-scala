@@ -14,5 +14,8 @@ To import into Intellij:
 (File)? -> Import Project -> select build.gradle -> Use local gradle distribution 1.11 -> Right click root folder -> Add frameworks support -> local Scala 2.10.3 home
 
 To build using Gradle:
-> gradle
+gradle
+
+To run:
+gradle run -q -Pargs=input.json
 

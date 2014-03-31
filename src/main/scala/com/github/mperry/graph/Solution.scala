@@ -1,8 +1,17 @@
 package com.github.mperry.graph
 
 import scala.io.Source
-import com.github.mperry.graph.json.{Search, JsonHelper}
+import com.github.mperry.graph.json.{Distance, Search, JsonHelper}
 import scala.annotation.tailrec
+
+
+
+import argonaut._, Argonaut._
+import scalaz._, Scalaz._
+
+
+
+//import Distance._
 
 object Solution {
 
@@ -38,8 +47,8 @@ object Solution {
 	def step(g: Graph): Unit = {
 		val line = nextLine("> ")
 		if (!isQuit(line)) {
-			processLine(g, line)
-			step(g)
+
+			step(processLine(g, line))
 		}
 	}
 
@@ -52,15 +61,32 @@ object Solution {
 		s.trim() == "q"
 	}
 
-	def processLine(g: Graph, text: String) = {
-		println(s"You entered $text")
-		def os = Search.parse(text)
-		os.map(s => {
-			def m = g.shortestPath(s.start, s.end)
-			val d = m.get(Node(s.end)).map(Graph.distance(_).toString).getOrElse("no path")
-			println(s"distance from ${s.start} to ${s.end} is $d")
+	def processSearch(g: Graph, s: Search): Graph = {
+		def m = g.shortestPath(s.start, s.end)
+		val optDist = m.get(Node(s.end)).map(d => Distance(Graph.distance(d)))
+		val default = jSingleObject("error", jString("some error"))
+		val json = optDist.map(d => d.toJson).getOrElse(default)
+		println(json)
+		g
+	}
 
-		})
+	def processSearch(g: Graph, text: String): Option[Graph] = {
+		Search.parse(text).map(processSearch(g, _))
+	}
+
+	def processMod(g: Graph, text: String): Option[Graph] = {
+		val o = Parse.parseOption(text).flatMap(JsonHelper.parseNode(_))
+		o.map(nt => Graph.mod(g, nt))
+	}
+
+	def processLine(g: Graph, text: String): Graph = {
+		println(s"You entered $text")
+
+//		val o = Search.parse(text).map(processSearch(g, _))
+		val o2 = processSearch(g, text)
+		val o3 = processMod(g, text)
+		o2.orElse(o3).getOrElse(g)
+
 	}
 
 }

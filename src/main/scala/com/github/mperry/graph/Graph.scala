@@ -1,5 +1,7 @@
 package com.github.mperry.graph
 
+import com.github.mperry.graph.json.JsonHelper.NodeTuple
+
 object Graph {
 
 	def distance(m: PathMap, n: NodeId): Option[Weight] = {
@@ -123,6 +125,12 @@ object Graph {
 			}))
 			newMap.getOrElse(distances)
 		}
+	}
+
+	def mod(g: Graph, nt: NodeTuple): Graph = {
+		// TODO
+		
+		g
 	}
 
 }

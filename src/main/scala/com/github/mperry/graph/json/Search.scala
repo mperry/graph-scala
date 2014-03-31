@@ -11,7 +11,7 @@ case class Search(start: String, end: String) {
 
 object Search {
 
-	implicit def JsonGraphCodecJson: CodecJson[Search] =
+	implicit def SearchCodecJson: CodecJson[Search] =
 		casecodec2(Search.apply, Search.unapply)("start", "end")
 
 	def parse(json: String): Option[Search] = {
